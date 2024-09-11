@@ -13,7 +13,6 @@ def show_main(request):
         'stock': 2
     }
 
-    # Menggabungkan dua dictionary
     context.update(identitas)
 
     return render(request, "main.html", context)
