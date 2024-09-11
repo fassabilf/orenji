@@ -1,7 +1,7 @@
 from django.db import models
 
 class OrenjiEntry(models.Model):
-    name = models.CharField(max_length=255)
+    product_name = models.CharField(max_length=255)
     price = models.IntegerField()
     descriptions = models.TextField()
     stock = models.IntegerField()
