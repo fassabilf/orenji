@@ -1,20 +1,38 @@
-<h5>Nama Produk: </h5>
-<p>{{ product_name }}</p>
+{% extends 'base.html' %}
+{% block content %}
 
-<h5>Harganya: </h5>
-<p>{{ price }}</p>
+<h1>Detail Produk</h1>
+
+<h5>Nama Produk: </h5>
+<p>{{ orenji_entry.product_name }}</p>
+
+<h5>Harga: </h5>
+<p>{{ orenji_entry.price }}</p>
 
 <h5>Deskripsi Produk: </h5>
-<p>{{ description }}</p>
+<p>{{ orenji_entry.descriptions }}</p>
 
 <h5>Stock: </h5>
-<p>{{ stock }}</p>
+<p>{{ orenji_entry.stock }}</p>
 
-<h5>Nama Pemilik Produk: </h5>
-<p>{{ nama }}</p>
+<h5>Ketersediaan: </h5>
+<p>{{ orenji_entry.is_can_buy|yesno:"Available,Out of Stock" }}</p>
 
-<h5>NPM Pemilik Produk: </h5>
-<p>{{ npm }}</p>
+<h1>Tambah Produk Baru</h1>
 
-<h5>Kelas Pemilik Produk: </h5>
-<p>{{ kelas }}</p>
+<form method="POST">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}  <!-- Form akan di-render sebagai tabel -->
+    <tr>
+      <td></td>
+      <td>
+        <button type="submit">Add Product</button>  <!-- Tombol submit untuk menambahkan produk -->
+      </td>
+    </tr>
+  </table>
+</form>
+
+<hr>
+
+{%endblock content %}
