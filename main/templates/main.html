@@ -3,36 +3,40 @@
 
 <h1>Detail Produk</h1>
 
-<h5>Nama Produk: </h5>
-<p>{{ orenji_entry.product_name }}</p>
+{% if not orenji_entries %}
+<p>Belum ada produk yang terdaftar.</p>
+{% else %}
+<table>
+  <tr>
+    <th>Nama Produk</th>
+    <th>Harga</th>
+    <th>Deskripsi Produk</th>
+    <th>Stock</th>
+    <th>Ketersediaan</th>
+  </tr>
 
-<h5>Harga: </h5>
-<p>{{ orenji_entry.price }}</p>
-
-<h5>Deskripsi Produk: </h5>
-<p>{{ orenji_entry.descriptions }}</p>
-
-<h5>Stock: </h5>
-<p>{{ orenji_entry.stock }}</p>
-
-<h5>Ketersediaan: </h5>
-<p>{{ orenji_entry.is_can_buy|yesno:"Available,Out of Stock" }}</p>
+  {% for orenji_entry in orenji_entries %}
+  <tr>
+    <td>{{ orenji_entry.product_name }}</td>
+    <td>{{ orenji_entry.price }}</td>
+    <td>{{ orenji_entry.descriptions }}</td>
+    <td>{{ orenji_entry.stock }}</td>
+    <td>{{ orenji_entry.is_can_buy|yesno:"Available,Out of Stock" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
 
 <h1>Tambah Produk Baru</h1>
 
-<form method="POST">
-  {% csrf_token %}
-  <table>
-    {{ form.as_table }}  <!-- Form akan di-render sebagai tabel -->
-    <tr>
-      <td></td>
-      <td>
-        <button type="submit">Add Product</button>  <!-- Tombol submit untuk menambahkan produk -->
-      </td>
-    </tr>
-  </table>
-</form>
+<a href="{% url 'main:create_orenji_entry' %}">
+  <button>Add New Product Entry</button>
+</a>
 
-<hr>
+<a href="{% url 'main:logout' %}">
+  <button>Logout</button>
+</a>
 
-{%endblock content %}
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+
+{% endblock content %}

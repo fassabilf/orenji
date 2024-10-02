@@ -6,6 +6,7 @@ Kelas : PBP F
 # List of Contents
 - [Tugas 2](#tugas-2)
 - [Tugas 3](#tugas-3)
+- [Tugas 4](#tugas-4)
 
 # Tugas 2
 
@@ -284,3 +285,115 @@ td>
 - Show JSON: ![./assets/postman_json](./assets/postman_json.png)
 - Show XML by ID: ![./assets/postman_xml_id](./assets/postman_xml_id.png)
 - Show JSON by ID: ![./assets/postman_json_id](./assets/postman_json_id.png)
+
+# Tugas 3
+
+## Apa perbedaan antara `HttpResponseRedirect()` dan `redirect()`?
+
+### Perbedaan:
+1. **HttpResponseRedirect()**: 
+   `HttpResponseRedirect()` adalah objek response yang mengarahkan pengguna ke URL lain. Saat kita memanggil fungsi ini, kita harus memberikan URL tujuan sebagai argumen, misalnya:
+
+   ```python
+   return HttpResponseRedirect('/some-url/')
+   ```
+
+   **Contoh penggunaan**:
+   ```python
+   from django.http import HttpResponseRedirect
+   def my_view(request):
+       return HttpResponseRedirect('/another-url/')
+   ```
+
+2. **redirect()**:
+   `redirect()` adalah shortcut di Django yang mempermudah pengalihan pengguna ke URL atau view tertentu. Kita dapat menggunakan nama URL atau memberikan instance model sebagai argumen, dan Django akan otomatis mencari URL tujuan yang tepat.
+
+   **Contoh penggunaan**:
+   ```python
+   from django.shortcuts import redirect
+   def my_view(request):
+       return redirect('url_name')
+   ```
+
+   **Kesimpulan**:
+   - `HttpResponseRedirect()` hanya menerima URL sebagai argumen.
+   - `redirect()` lebih fleksibel, karena dapat menerima nama URL, objek model, atau bahkan string URL, sehingga lebih umum digunakan dalam aplikasi Django.
+
+## Jelaskan cara kerja penghubungan model `Product` dengan `User`!
+
+### Penghubungan Model:
+Penghubungan antara `Product` dan `User` dilakukan melalui relasi `ForeignKey`. Ini memungkinkan setiap entri produk (`Product`) terhubung dengan pengguna (`User`) yang membuatnya.
+
+### Cara Kerja:
+1. **Tambahkan `ForeignKey` ke Model**: 
+   Di model `Product`, tambahkan field `user` yang mengacu pada model `User` dengan `ForeignKey`. Hal ini menciptakan relasi satu ke banyak antara `User` dan `Product`.
+
+   **Contoh Implementasi**:
+   ```python
+   from django.contrib.auth.models import User
+   from django.db import models
+   from django.contrib.auth.models import User
+   
+   class OrenjiEntry(models.Model):
+        user = models.ForeignKey(User, on_delete=models.CASCADE)
+   ```
+
+2. **Cara Kerja**:
+   - Saat pengguna membuat OrenjiEntry (yang berisi produk), produk tersebut akan disimpan dengan referensi ke pengguna yang sedang login (`request.user`).
+   - Dengan demikian, setiap produk dihubungkan dengan pengguna tertentu, memungkinkan pengambilan data produk yang terkait dengan pengguna tersebut.
+
+## Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+
+### Authentication vs Authorization:
+1. **Authentication (Otentikasi)**:
+   - Otentikasi adalah proses memverifikasi identitas pengguna, biasanya melalui username dan password. Saat pengguna login, sistem memastikan apakah identitas pengguna benar dan sesuai.
+
+   **Di Django**:
+   - Proses otentikasi diimplementasikan menggunakan fungsi `authenticate()` dan `login()`. Django menyediakan form otentikasi standar yang memverifikasi kredensial pengguna.
+   
+2. **Authorization (Otorisasi)**:
+   - Otorisasi adalah proses menentukan apa yang boleh dilakukan oleh pengguna setelah mereka terotentikasi. Setelah pengguna berhasil login, sistem menentukan hak akses mereka ke sumber daya tertentu.
+
+   **Di Django**:
+   - Django mengelola otorisasi melalui permissions dan decorators seperti `@login_required` untuk membatasi akses halaman hanya bagi pengguna yang sudah login.
+   
+### Saat Pengguna Login:
+- Django akan melakukan **authentication** dengan memeriksa username dan password melalui `authenticate()`. Jika valid, Django akan menciptakan session untuk pengguna dan menyimpan informasi login mereka menggunakan `login()`.
+
+## Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+
+### Cara Django Mengingat Pengguna:
+- Django menggunakan **session** dan **cookies** untuk mengingat pengguna yang login. Setelah pengguna berhasil login, Django akan membuat session ID yang unik dan menyimpannya di browser pengguna dalam bentuk **cookie** bernama `sessionid`. Di server, session ini digunakan untuk melacak status login pengguna.
+
+### Kegunaan Lain dari Cookies:
+Selain mengingat pengguna yang login, cookies juga dapat digunakan untuk:
+1. **Melacak preferensi pengguna** (seperti tema atau pengaturan bahasa).
+2. **Menyimpan data sementara** yang diperlukan antar halaman.
+3. **Membuat pengalaman pengguna lebih personal** dengan menyimpan informasi tertentu secara lokal di browser.
+
+### Keamanan Cookies:
+Tidak semua cookies aman digunakan. Cookies dapat digunakan untuk:
+- **Session hijacking** jika session cookies tidak dilindungi dengan benar.
+- Untuk menjaga keamanan cookies, Django menyediakan fitur seperti:
+  - **`HttpOnly`**: Membatasi akses ke cookie melalui JavaScript, mencegah serangan XSS (Cross-Site Scripting).
+  - **`Secure`**: Mengirim cookies hanya melalui HTTPS, menjaga keamanan cookies saat ditransmisikan.
+  - **`CSRF Token`**: Melindungi aplikasi dari serangan CSRF dengan memvalidasi permintaan POST melalui token.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)
+
+### Langkah-langkah Implementasi Checklist:
+
+1. **Membuat Form Registrasi, Login, dan Logout**:
+   - Membuat fungsi `register_user()`, `login_user()`, dan `logout_user()` di `views.py` untuk menangani proses registrasi, login, dan logout pengguna. Saya juga menggunakan `UserCreationForm` untuk mempermudah pembuatan akun.
+
+2. **Membuat Akun Pengguna dan Dummy Data**:
+   - Saya menambahkan dua akun pengguna dan membuat tiga entri produk untuk masing-masing akun. Data produk disimpan menggunakan form `OrenjiEntryForm`.
+
+3. **Menghubungkan Model `OrenjiEntry` dengan `User`**:
+   - Saya menambahkan `ForeignKey` pada model `OrenjiEntry` untuk menghubungkannya dengan model `User`, memastikan bahwa setiap produk yang dibuat oleh pengguna memiliki referensi ke pengguna tersebut.
+
+4. **Menampilkan Informasi Pengguna yang Login**:
+   - Saya menggunakan `request.user.username` di `views.py` untuk menampilkan informasi pengguna yang sedang login di halaman utama (`main.html`), serta menambahkan cookie `last_login` untuk menampilkan kapan terakhir kali pengguna login.
+
+5. **Menggunakan Cookies untuk Menyimpan Last Login**:
+   - Pada saat login, saya menggunakan `response.set_cookie()` untuk menyimpan waktu terakhir kali pengguna login di cookie `last_login` dan menampilkannya di halaman utama.
