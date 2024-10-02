@@ -13,6 +13,8 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
+
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -89,3 +91,27 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+
+@login_required(login_url='/login')
+def edit_orenji_entry(request, id):
+    orenji_entry = get_object_or_404(OrenjiEntry, id=id)
+    form = OrenjiEntryForm(request.POST or None, instance=orenji_entry)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect('main:show_main')
+
+    context = {'form': form, 'is_edit': True}
+    return render(request, 'create_orenji_entry.html', context)
+
+@login_required(login_url='/login')
+def delete_orenji_entry(request, id):
+    orenji_entry = get_object_or_404(OrenjiEntry, id=id)
+    
+    if request.method == "POST":
+        orenji_entry.delete()
+        return redirect('main:show_main')
+
+    context = {'orenji_entry': orenji_entry}
+    return render(request, 'delete_confirmation.html', context)

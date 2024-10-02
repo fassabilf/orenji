@@ -7,6 +7,7 @@ Kelas : PBP F
 - [Tugas 2](#tugas-2)
 - [Tugas 3](#tugas-3)
 - [Tugas 4](#tugas-4)
+- [Tugas 5](#tugas-5)
 
 # Tugas 2
 
@@ -397,3 +398,141 @@ Tidak semua cookies aman digunakan. Cookies dapat digunakan untuk:
 
 5. **Menggunakan Cookies untuk Menyimpan Last Login**:
    - Pada saat login, saya menggunakan `response.set_cookie()` untuk menyimpan waktu terakhir kali pengguna login di cookie `last_login` dan menampilkannya di halaman utama.
+
+Berikut adalah penjelasan yang lebih lengkap dan rapi untuk README.md yang mencakup jawaban atas pertanyaan-pertanyaan yang kamu ajukan:
+
+---
+
+# Tugas 5
+
+## **Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!**
+
+Dalam CSS, urutan prioritas pengambilan selector disebut **Specificity**. Berikut adalah urutan prioritas yang menentukan selector mana yang akan diterapkan pada elemen:
+
+1. **Inline Styles**: Gaya yang ditulis langsung di elemen HTML memiliki prioritas tertinggi. Contoh:
+   ```html
+   <p style="color: red;">Text</p>
+   ```
+
+2. **ID Selector**: Selector yang menggunakan ID memiliki prioritas lebih tinggi daripada class atau tag. Contoh:
+   ```css
+   #header {
+       color: blue;
+   }
+   ```
+
+3. **Class, Pseudo-class, dan Attribute Selectors**: Selector ini memiliki prioritas lebih rendah daripada ID, tetapi lebih tinggi daripada selector elemen. Contoh:
+   ```css
+   .header {
+       color: green;
+   }
+   ```
+
+4. **Tag/Element Selector**: Selector ini memiliki prioritas terendah. Contoh:
+   ```css
+   p {
+       color: black;
+   }
+   ```
+
+Jika ada konflik antara selector, yang memiliki spesifikitas lebih tinggi akan diambil. Jika spesifikasinya sama, selector yang ditulis terakhir akan digunakan.
+
+---
+
+## **Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design!**
+
+**Responsive design** adalah pendekatan desain web yang memastikan tampilan halaman web dapat beradaptasi dengan baik di berbagai ukuran layar, mulai dari desktop hingga perangkat seluler. Responsive design sangat penting karena:
+
+- **Pengguna beragam perangkat**: Saat ini, pengguna mengakses web dari berbagai perangkat seperti ponsel, tablet, dan desktop, sehingga tampilan harus konsisten dan mudah digunakan di berbagai ukuran layar.
+- **SEO (Search Engine Optimization)**: Google memberikan preferensi lebih tinggi pada situs web yang mobile-friendly dalam peringkat pencariannya.
+- **Pengalaman pengguna**: Desain yang responsif memberikan pengalaman pengguna yang optimal, yang berpotensi meningkatkan tingkat konversi dan interaksi pengguna.
+
+### Contoh:
+- **Sudah menerapkan responsive design**: **Instagram**, yang menyesuaikan layout secara otomatis pada berbagai ukuran layar.
+- **Belum menerapkan responsive design**: **Situs-situs lama** atau situs web yang tidak dioptimalkan, seperti beberapa situs pemerintahan, yang tidak dirancang untuk tampilan mobile-friendly.
+
+---
+
+## **Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!**
+
+- **Margin**: Jarak di luar elemen yang mengatur ruang antara elemen tersebut dan elemen lainnya di luar kotaknya. **Margin** tidak memiliki warna dan bersifat transparan.
+   ```css
+   .element {
+       margin: 20px;
+   }
+   ```
+
+- **Border**: Garis yang mengelilingi elemen, berada di antara padding dan margin. **Border** memiliki warna dan dapat diatur ketebalannya.
+   ```css
+   .element {
+       border: 2px solid black;
+   }
+   ```
+
+- **Padding**: Ruang di dalam elemen antara konten dan batas elemen (border). **Padding** bersifat transparan dan mengatur jarak di dalam elemen itu sendiri.
+   ```css
+   .element {
+       padding: 15px;
+   }
+   ```
+
+Secara singkat, **padding** mengatur jarak dalam elemen, **border** berada di sekitar elemen, dan **margin** mengatur jarak antara elemen dengan elemen lainnya.
+
+---
+
+## **Jelaskan konsep flex box dan grid layout beserta kegunaannya!**
+
+### **Flexbox**:
+**Flexbox** (Flexible Box) adalah metode tata letak yang digunakan untuk mengatur dan menyelaraskan item dalam satu dimensi (baris atau kolom). Flexbox berguna untuk membuat tata letak yang responsif dan adaptif.
+
+Contoh Flexbox:
+```css
+.container {
+    display: flex;
+    justify-content: space-between; /* Mengatur jarak antar item */
+    align-items: center; /* Menyelaraskan item secara vertikal */
+}
+```
+
+### **Grid Layout**:
+**CSS Grid** adalah sistem tata letak dua dimensi yang memungkinkan untuk mendefinisikan struktur grid dan menempatkan elemen di baris dan kolom. Grid sangat berguna untuk membuat tata letak kompleks yang melibatkan banyak baris dan kolom.
+
+Contoh CSS Grid:
+```css
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Membuat 3 kolom dengan ukuran yang sama */
+    grid-template-rows: auto; /* Baris akan otomatis disesuaikan */
+}
+```
+
+**Kegunaan**:
+- **Flexbox**: Lebih cocok untuk tata letak satu dimensi (baris atau kolom).
+- **Grid Layout**: Lebih cocok untuk tata letak dua dimensi yang kompleks (baris dan kolom).
+
+---
+
+## **Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)**
+
+1. **Menambahkan Fungsi Hapus dan Edit Produk**:
+   - Saya menambahkan dua view baru, yaitu `edit_orenji_entry()` dan `delete_orenji_entry()` untuk mengelola fungsi edit dan hapus produk.
+   - URL pattern diperbarui untuk mendukung UUID sebagai identifier produk.
+
+2. **Kustomisasi Tampilan dengan CSS**:
+   - Saya menambahkan Bootstrap ke proyek untuk mempercepat pengembangan layout responsif.
+   - Menggunakan Flexbox dan Grid Layout untuk mengatur tata letak produk, membuat tampilan lebih dinamis di perangkat mobile.
+
+3. **Kustomisasi Halaman Login, Register, dan Tambah Produk**:
+   - Saya memperbarui template HTML untuk halaman login, register, dan tambah produk dengan menggunakan Bootstrap dan custom CSS agar tampilannya lebih menarik dan user-friendly.
+
+4. **Menambahkan Responsive Design pada Daftar Produk**:
+   - Menggunakan card Bootstrap dan Flexbox untuk menampilkan produk dalam layout yang responsif.
+   - Jika tidak ada produk yang tersedia, saya menampilkan gambar placeholder dan pesan yang menjelaskan bahwa tidak ada produk terdaftar.
+
+5. **Menambahkan Tombol Edit dan Hapus di Card Produk**:
+   - Setiap produk memiliki tombol **Edit** dan **Delete**. Tombol ini akan membuka halaman edit atau menghapus produk terkait setelah dikonfirmasi.
+
+6. **Membuat Navbar yang Responsif**:
+   - Saya menambahkan navbar responsif dengan Bootstrap, sehingga menyesuaikan tampilannya di berbagai ukuran layar.
+
+---

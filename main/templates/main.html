@@ -1,42 +1,53 @@
+
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Detail Produk</h1>
 
-<h1>Detail Produk</h1>
+    {% if not orenji_entries %}
+    <div class="text-center">
+        <p>Belum ada produk yang terdaftar.</p>
+        <img src="{% static 'assets/placeholder.jpg' %}" alt="No products" class="img-fluid">
+    </div>
+    {% else %}
+    <div class="row">
+        {% for orenji_entry in orenji_entries %}
+        <div class="col-md-4 col-sm-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ orenji_entry.product_name }}</h5>
+                    <p class="card-text">Harga: {{ orenji_entry.price }}</p>
+                    <p class="card-text">Deskripsi: {{ orenji_entry.descriptions }}</p>
+                    <p class="card-text">Stock: {{ orenji_entry.stock }}</p>
+                    <p class="card-text">Ketersediaan: {{ orenji_entry.is_can_buy|yesno:"Available,Out of Stock" }}</p>
 
-{% if not orenji_entries %}
-<p>Belum ada produk yang terdaftar.</p>
-{% else %}
-<table>
-  <tr>
-    <th>Nama Produk</th>
-    <th>Harga</th>
-    <th>Deskripsi Produk</th>
-    <th>Stock</th>
-    <th>Ketersediaan</th>
-  </tr>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'main:edit_orenji_entry' orenji_entry.id %}" class="btn btn-primary">Edit</a>
+                        <form action="{% url 'main:delete_orenji_entry' orenji_entry.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-  {% for orenji_entry in orenji_entries %}
-  <tr>
-    <td>{{ orenji_entry.product_name }}</td>
-    <td>{{ orenji_entry.price }}</td>
-    <td>{{ orenji_entry.descriptions }}</td>
-    <td>{{ orenji_entry.stock }}</td>
-    <td>{{ orenji_entry.is_can_buy|yesno:"Available,Out of Stock" }}</td>
-  </tr>
-  {% endfor %}
-</table>
-{% endif %}
+    <div class="mt-4 text-center">
+        <h2>Tambah Produk Baru</h2>
+        <a href="{% url 'main:create_orenji_entry' %}" class="btn btn-success">Add New Product Entry</a>
+    </div>
 
-<h1>Tambah Produk Baru</h1>
+    <div class="mt-3 text-center">
+        <a href="{% url 'main:logout' %}" class="btn btn-secondary">Logout</a>
+    </div>
 
-<a href="{% url 'main:create_orenji_entry' %}">
-  <button>Add New Product Entry</button>
-</a>
-
-<a href="{% url 'main:logout' %}">
-  <button>Logout</button>
-</a>
-
-<h5>Sesi terakhir login: {{ last_login }}</h5>
-
+    <div class="mt-3 text-center">
+        <h5>Sesi terakhir login: {{ last_login }}</h5>
+    </div>
+</div>
 {% endblock content %}
