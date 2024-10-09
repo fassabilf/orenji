@@ -15,16 +15,18 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 @login_required(login_url='/login')
 def show_main(request):
-    orenji_entries = OrenjiEntry.objects.filter(user=request.user)
+    # orenji_entries = OrenjiEntry.objects.filter(user=request.user)
 
     context = {
         'name': request.user.username,
         'class': 'PBP F',
         'npm': '2306224354',
-        'orenji_entries': orenji_entries,  # Mengirim data produk yang dimiliki user yang login
+        # 'orenji_entries': orenji_entries,  # Mengirim data produk yang dimiliki user yang login
         'last_login': request.COOKIES.get('last_login', 'No data available'),  # Mengambil cookies last_login jika ada
     }
 
@@ -92,26 +94,54 @@ def logout_user(request):
     response.delete_cookie('last_login')
     return response
 
-
 @login_required(login_url='/login')
 def edit_orenji_entry(request, id):
-    orenji_entry = get_object_or_404(OrenjiEntry, id=id)
+    # Dapatkan OrenjiEntry berdasarkan id
+    orenji_entry = OrenjiEntry.objects.get(pk=id)
+
+    # Set OrenjiEntry sebagai instance dari form
     form = OrenjiEntryForm(request.POST or None, instance=orenji_entry)
 
-    if request.method == "POST" and form.is_valid():
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman utama
         form.save()
-        return redirect('main:show_main')
+        return HttpResponseRedirect(reverse('main:show_main'))
 
-    context = {'form': form, 'is_edit': True}
-    return render(request, 'create_orenji_entry.html', context)
+    context = {'form': form}
+    return render(request, "edit_orenji_entry.html", context)
 
 @login_required(login_url='/login')
 def delete_orenji_entry(request, id):
-    orenji_entry = get_object_or_404(OrenjiEntry, id=id)
-    
-    if request.method == "POST":
-        orenji_entry.delete()
-        return redirect('main:show_main')
+    # Dapatkan OrenjiEntry berdasarkan id
+    orenji_entry = OrenjiEntry.objects.get(pk=id)
 
-    context = {'orenji_entry': orenji_entry}
-    return render(request, 'delete_confirmation.html', context)
+    # Hapus OrenjiEntry
+    orenji_entry.delete()
+
+    # Kembali ke halaman utama
+    return HttpResponseRedirect(reverse('main:show_main'))
+
+@login_required(login_url='/login')
+@csrf_exempt
+@require_POST
+def add_orenji_entry_ajax(request):
+    product_name = request.POST.get("product_name")
+    price = request.POST.get("price")
+    descriptions = request.POST.get("descriptions")
+    stock = request.POST.get("stock")
+    user = request.user
+
+    if product_name and price and descriptions and stock:
+        # Membuat entri baru
+        new_entry = OrenjiEntry(
+            product_name=product_name,
+            price=price,
+            descriptions=descriptions,
+            stock=stock,
+            user=user
+        )
+        new_entry.save()
+
+        return HttpResponse(b"CREATED", status=201)  # Menggunakan HttpResponse b"CREATED"
+    else:
+        return HttpResponse(b"FAILED", status=400)  # Balikan error jika data tidak lengkap

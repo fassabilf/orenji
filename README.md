@@ -8,6 +8,7 @@ Kelas : PBP F
 - [Tugas 3](#tugas-3)
 - [Tugas 4](#tugas-4)
 - [Tugas 5](#tugas-5)
+- [Tugas 6](#tugas-6)
 
 # Tugas 2
 
@@ -534,5 +535,56 @@ Contoh CSS Grid:
 
 6. **Membuat Navbar yang Responsif**:
    - Saya menambahkan navbar responsif dengan Bootstrap, sehingga menyesuaikan tampilannya di berbagai ukuran layar.
+
+---
+# Tugas 6 - Implementing AJAX
+
+## **Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!**
+
+JavaScript memungkinkan interaksi dinamis pada halaman web. Dengan JavaScript, konten halaman web dapat diperbarui secara dinamis tanpa memuat ulang halaman, memberikan pengalaman pengguna yang lebih cepat dan interaktif. Selain itu, JavaScript juga dapat digunakan untuk memvalidasi form sebelum dikirimkan, meningkatkan kinerja aplikasi web, dan membantu dalam mengakses atau memanipulasi elemen DOM (Document Object Model) secara langsung.
+
+---
+
+## **Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?**
+
+`await` digunakan untuk menunggu hasil dari operasi asynchronous seperti `fetch()` tanpa memblokir eksekusi kode berikutnya. Ketika kita menggunakan `await`, JavaScript akan menunggu sampai `fetch()` selesai mendapatkan data dari server sebelum melanjutkan ke baris kode berikutnya. Jika kita tidak menggunakan `await`, `fetch()` akan mengembalikan sebuah promise, dan kode akan terus berjalan tanpa menunggu data dikembalikan. Ini dapat menyebabkan kesalahan jika kita mencoba menggunakan data yang belum tersedia.
+
+---
+
+## **Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?**
+
+Decorator `csrf_exempt` diperlukan pada view yang digunakan untuk AJAX POST karena Django secara default memerlukan token CSRF untuk setiap permintaan POST sebagai perlindungan terhadap serangan CSRF (Cross-Site Request Forgery). Dengan menambahkan `@csrf_exempt`, kita memberitahu Django untuk tidak memeriksa token CSRF pada permintaan tersebut, sehingga memungkinkan AJAX POST berfungsi tanpa memerlukan token CSRF.
+
+Namun, ini harus digunakan dengan hati-hati karena bisa membuka celah keamanan jika tidak dikendalikan dengan baik.
+
+---
+
+## **Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?**
+
+Pembersihan data input hanya di frontend bisa membuat aplikasi lebih rentan terhadap serangan keamanan. Pengguna dapat memodifikasi kode frontend atau menggunakan alat eksternal untuk mengirimkan data yang berbahaya, seperti memasukkan kode HTML atau skrip berbahaya ke dalam formulir. Dengan melakukan pembersihan di backend, kita bisa memastikan bahwa data yang diterima aman dan sesuai dengan aturan yang ditentukan. Ini melindungi aplikasi dari serangan seperti XSS (Cross-Site Scripting) atau SQL Injection.
+
+---
+
+## **Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)**
+
+1. **Mengubah `main.html` untuk mendukung AJAX GET dan POST**:
+   - Saya menambahkan tombol untuk membuka modal yang berisi form untuk menambah produk baru menggunakan AJAX POST.
+   - Saya menghapus logika pengambilan produk secara langsung di template dan menggantinya dengan fungsi JavaScript `getOrenjiEntries()` yang mengambil data produk menggunakan AJAX GET dari endpoint `show_json`.
+   - Produk yang diambil dari AJAX GET ditampilkan di halaman menggunakan DOM manipulation.
+
+2. **Menambahkan fungsi view `add_orenji_entry_ajax()`**:
+   - Saya menambahkan view baru untuk menambahkan entri produk ke dalam database melalui permintaan AJAX POST.
+   - View ini menerima data produk dari request POST, melakukan pembersihan, dan menyimpan produk ke dalam database.
+
+3. **Mengimplementasikan AJAX POST untuk menambah produk baru**:
+   - Saya menambahkan modal yang di-trigger dengan tombol. Modal ini berisi form untuk menambahkan produk baru.
+   - Form di dalam modal dikirimkan menggunakan `fetch()` dengan method POST ke endpoint `add_orenji_entry_ajax`.
+   - Setelah produk berhasil ditambahkan, modal ditutup dan daftar produk diperbarui secara otomatis tanpa me-reload halaman.
+
+4. **Menghubungkan modal ke form AJAX**:
+   - Saya menambahkan event listener ke form di dalam modal untuk mencegah pengiriman form secara default. Sebagai gantinya, form dikirim menggunakan `fetch()` untuk melakukan POST ke server secara asynchronous.
+
+5. **Refresh daftar produk setelah berhasil menambahkan produk**:
+   - Setelah form dikirim melalui AJAX POST, saya memanggil fungsi `refreshOrenjiEntries()` yang akan memanggil ulang data produk melalui AJAX GET dan memperbarui tampilan produk di halaman utama.
 
 ---
